@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>DCM LOTERIAS Y MAS - BRIDE</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #222;
+        }
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffd700,;
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 2.2rem;
+        }
+        p {
+            color: #666;
+            margin-top: 0;
+        }
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            max-width: 1000px;
+            width: 100%;
+        }
+        .game-panel, .setup-panel {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            padding: 25px;
+            flex: 1;
+            min-width: 320px;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card-display {
+            width: 240px;
+            height: 340px;
+            border: 4px solid var(--border-color);
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .card-display img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #fff;
+        }
+        .placeholder-text {
+            color: #aaa;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+        #card-name {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 10px 0 20px 0;
+            color: var(--text-color);
+            text-align: center;
+            min-height: 40px;
+        }
+        .controls-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button:hover { background-color: #2980b9; transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+        button.secondary { background-color: #95a5a6; }
+        button.secondary:hover { background-color: #7f8c8d; }
+        button.success { background-color: #2ecc71; }
+        button.success:hover { background-color: #27ae60; }
+        button.warning { background-color: #e67e22; }
+        button.warning:hover { background-color: #d35400; }
+        
+        .settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin: 10px 0;
+            font-size: 0.95rem;
+        }
+        .settings-row select, .settings-row input {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 0.95rem;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            height: 12px;
+            overflow: hidden;
+            margin: 15px 0 5px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #3498db;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .history-container {
+            width: 100%;
+            margin-top: 20px;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+            background: #fafafa;
+        }
+        .history-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        .history-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .history-thumb {
+            width: 40px;
+            height: 55px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            object-fit: cover;
+            background: #fff;
+        }
+        .badge {
+            background: #e2e8f0;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: #4a5568;
+            font-weight: 600;
+        }
+        .instructions-box {
+            background: #eef2f7;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            border-radius: 4px;
+            color: #444;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .instructions-box h4 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+        .instructions-box ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+        .instructions-box li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>DCM LOTERIAS Y MAS - BRIDE</h1>
+        <p>Gracias por permitirnos ser parte de tú evento</p>
+    </header>
+
+    <div class="main-container">
+        <!-- Panel de Juego -->
+        <div class="game-panel">
+            <div class="badge" id="counter-badge">Carta 0 de 54</div>
+            
+            <div id="card-name">¡Listos para jugar!</div>
+
+            <div class="card-display">
+                <img id="current-image" src="Diapositiva0.JPG" alt="Carta de Lotería">
+                <div id="placeholder" class="placeholder-text" style="display: none;">Presiona "Siguiente" o "Iniciar Automático"</div>
+            </div>
+
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+
+            <div class="controls-group">
+                <button onclick="siguienteCarta()">Siguiente Carta</button>
+                <button id="btn-auto" class="success" onclick="toggleAuto()">Modo Automático</button>
+                <button class="warning" onclick="repetirGrito()">Repetir Grito</button>
+                <button class="secondary" onclick="reiniciarJuego()">Reiniciar</button>
+            </div>
+
+            <div class="history-container">
+                <div class="history-title">Cartas Anteriores (<span id="history-count">0</span>)</div>
+                <div id="history-grid" class="history-grid"></div>
+            </div>
+        </div>
+
+        <!-- Panel de Configuración -->
+        <div class="setup-panel">
+            <h3 style="margin-top:0; color:#333;">Configuración</h3>
+            
+            <div class="settings-row">
+                <label for="speed-range">Velocidad automática:</label>
+                <span id="speed-val">5s</span>
+            </div>
+            <input type="range" id="speed-range" min="3" max="12" value="5" style="width:100%; margin-bottom: 15px;" oninput="actualizarVelocidad(this.value)">
+
+            <div class="settings-row">
+                <label for="voice-select">Voz del Gritón:</label>
+                <select id="voice-select" style="width: 160px;" onchange="cambiarVoz()"></select>
+            </div>
+
+            <div class="settings-row">
+                <label for="shuffle-check">Barajear aleatorio:</label>
+                <input type="checkbox" id="shuffle-check" checked>
+            </div>
+
+            <div class="instructions-box">
+                <h4>Instrucciones de los controles:</h4>
+                <ul>
+                    <li><strong>Comenzar/Siguiente Carta:</strong> Muestra y canta manualmente la siguiente carta de la baraja.</li>
+                    <li><strong>Modo Automático:</strong> Inicia o pausa el avance automático de las cartas según el intervalo de tiempo seleccionado.</li>
+                    <li><strong>Repetir Grito:</strong> Vuelve a reproducir por voz el nombre de la carta actual.</li>
+                    <li><strong>Reiniciar:</strong> Reinicia el juego desde el principio, barajando de nuevo las cartas si la opción está activada.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let imagenInicio = "Diapositiva0.JPG";
+
+        let baraja = [
+            { nombre: "LA NOVIA", archivo: "Diapositiva1.JPG" },
+            { nombre: "EL NOVIO", archivo: "Diapositiva2.JPG" },
+            { nombre: "EL ANILLO", archivo: "Diapositiva3.JPG" },
+            { nombre: "EL VESTIDO", archivo: "Diapositiva4.JPG" },
+            { nombre: "EL VELO", archivo: "Diapositiva5.JPG" },
+            { nombre: "EL RAMO", archivo: "Diapositiva6.JPG" },
+            { nombre: "LOS TACONES", archivo: "Diapositiva7.JPG" },
+            { nombre: "EL LABIAL", archivo: "Diapositiva8.JPG" },
+            { nombre: "EL PERFUME", archivo: "Diapositiva9.JPG" },
+            { nombre: "EL ESPEJO", archivo: "Diapositiva10.JPG" },
+            { nombre: "LA LIGA", archivo: "Diapositiva11.JPG" },
+            { nombre: "CHAMPAGNE", archivo: "Diapositiva12.JPG" },
+            { nombre: "LAS COPAS", archivo: "Diapositiva13.JPG" },
+            { nombre: "EL PASTEL", archivo: "Diapositiva14.JPG" },
+            { nombre: "LAS AMIGAS", archivo: "Diapositiva15.JPG" },
+            { nombre: "LA DAMA DE HONOR", archivo: "Diapositiva16.JPG" },
+            { nombre: "LA SUEGRA", archivo: "Diapositiva17.JPG" },
+            { nombre: "EL BESO", archivo: "Diapositiva18.JPG" },
+            { nombre: "LUNA DE MIEL", archivo: "Diapositiva19.JPG" },
+            { nombre: "EL STRIPPER", archivo: "Diapositiva20.JPG" },
+            { nombre: "LA LENCERIA", archivo: "Diapositiva21.JPG" },
+            { nombre: "EL AMOR", archivo: "Diapositiva22.JPG" },
+            { nombre: "LOS REGALOS", archivo: "Diapositiva23.JPG" },
+            { nombre: "EL TRAJE DEL NOVIO", archivo: "Diapositiva24.JPG" },
+            { nombre: "LA MÚSICA", archivo: "Diapositiva25.JPG" },
+            { nombre: "EL DJ", archivo: "Diapositiva26.JPG" },
+            { nombre: "LA INVITACIÓN", archivo: "Diapositiva27.JPG" },
+            { nombre: "LOS VOTOS DE AMOR", archivo: "Diapositiva28.JPG" },
+            { nombre: "LAS UÑAS", archivo: "Diapositiva29.JPG" },
+            { nombre: "LOS ANILLOS", archivo: "Diapositiva30.JPG" },
+            { nombre: "EL MAQUILLAJE", archivo: "Diapositiva31.JPG" },
+            { nombre: "EL PEINADO", archivo: "Diapositiva32.JPG" },
+            { nombre: "EL JUEZ", archivo: "Diapositiva33.JPG" },
+            { nombre: "PANTUNFLAS", archivo: "Diapositiva34.JPG" },
+            { nombre: "LA PIJAMA", archivo: "Diapositiva35.JPG" },
+            { nombre: "EL CHOCOLATE", archivo: "Diapositiva36.JPG" },
+            { nombre: "EL BANQUETE", archivo: "Diapositiva37.JPG" },
+            { nombre: "LA FECHA", archivo: "Diapositiva38.JPG" },
+            { nombre: "CÚPIDO", archivo: "Diapositiva39.JPG" },
+            { nombre: "LA FIESTA", archivo: "Diapositiva40.JPG" },
+            { nombre: "EL SECRETO", archivo: "Diapositiva41.JPG" },
+            { nombre: "EL CONSEJO", archivo: "Diapositiva42.JPG" },
+            { nombre: "LA SOLTERÍA", archivo: "Diapositiva43.JPG" },
+            { nombre: "LA IGLESIA", archivo: "Diapositiva44.JPG" },
+            { nombre: "LA PALOMA", archivo: "Diapositiva45.JPG" },
+            { nombre: "EL SÍ ACEPTO", archivo: "Diapositiva46.JPG" },
+            { nombre: "EL AUTO", archivo: "Diapositiva47.JPG" },
+            { nombre: "ALGO VIEJO", archivo: "Diapositiva48.JPG" },
+            { nombre: "ALGO NUEVO", archivo: "Diapositiva49.JPG" },
+            { nombre: "ALGO PRESTADO", archivo: "Diapositiva50.JPG" },
+            { nombre: "ALGO AZUL", archivo: "Diapositiva51.JPG" },
+            { nombre: "RAMILLETE", archivo: "Diapositiva52.JPG" },
+            { nombre: "ARCO FLORAL", archivo: "Diapositiva53.JPG" },
+            { nombre: "LA FOTOGRAFÍA", archivo: "Diapositiva54.JPG" }
+        ];
+
+        let barajaRestante = [];
+        let historialCartas = [];
+        let cartaActualObj = null;
+        let autoInterval = null;
+        let isAutoPlaying = false;
+        let intervaloSegundos = 5;
+        let vocesDisponibles = [];
+        let vozSeleccionada = null;
+        let esPrimeraCarta = true;
+
+        function cargarVoces() {
+            try {
+                if (!('speechSynthesis' in window)) return;
+                vocesDisponibles = window.speechSynthesis.getVoices();
+                let select = document.getElementById("voice-select");
+                select.innerHTML = "";
+                
+                let esVoces = vocesDisponibles.filter(v => v.lang.startsWith('es'));
+                let listaAMostrar = esVoces.length > 0 ? esVoces : vocesDisponibles;
+
+                listaAMostrar.forEach((voz) => {
+                    let option = document.createElement("option");
+                    option.value = vocesDisponibles.indexOf(voz);
+                    option.text = `${voz.name} (${voz.lang})`;
+                    select.appendChild(option);
+                });
+
+                if (listaAMostrar.length > 0) {
+                    vozSeleccionada = vocesDisponibles.indexOf(listaAMostrar[0]);
+                    select.value = vozSeleccionada;
+                }
+            } catch (e) {
+                console.log("No se pudieron cargar las voces:", e);
+            }
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = cargarVoces;
+            setTimeout(cargarVoces, 200);
+        }
+
+        function cambiarVoz() {
+            let select = document.getElementById("voice-select");
+            vozSeleccionada = parseInt(select.value);
+        }
+
+        function hablar(texto) {
+            try {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    let utterance = new SpeechSynthesisUtterance(texto);
+                    if (vozSeleccionada !== null && vocesDisponibles[vozSeleccionada]) {
+                        utterance.voice = vocesDisponibles[vozSeleccionada];
+                    }
+                    utterance.lang = 'es-MX';
+                    utterance.rate = 0.95;
+                    window.speechSynthesis.speak(utterance);
+                }
+            } catch (e) {
+                console.log("Error al reproducir voz:", e);
+            }
+        }
+
+        function repetirGrito() {
+            if (cartaActualObj) {
+                if (esPrimeraCarta) {
+                    hablar("¡Corre y se va con... la primera! " + cartaActualObj.nombre + ".");
+                } else {
+                    hablar(cartaActualObj.nombre);
+                }
+            } else {
+                hablar("¡Inicia el juego de lotería!");
+            }
+        }
+
+        function actualizarVelocidad(val) {
+            intervaloSegundos = parseInt(val);
+            document.getElementById("speed-val").innerText = val + "s";
+            if (isAutoPlaying) {
+                detenerAuto();
+                iniciarAuto();
+            }
+        }
+
+        function reiniciarJuego() {
+            detenerAuto();
+            let shouldShuffle = document.getElementById("shuffle-check").checked;
+            barajaRestante = [...baraja];
+            if (shouldShuffle) {
+                barajaRestante.sort(() => Math.random() - 0.5);
+            }
+            historialCartas = [];
+            cartaActualObj = null;
+            esPrimeraCarta = true;
+
+            document.getElementById("card-name").innerText = "¡Nuevo juego listo!";
+            
+            let imgElem = document.getElementById("current-image");
+            imgElem.src = imagenInicio;
+            imgElem.style.display = "block";
+            document.getElementById("placeholder").style.display = "none";
+
+            document.getElementById("counter-badge").innerText = `Carta 0 de ${baraja.length}`;
+            document.getElementById("progress-fill").style.width = "0%";
+            actualizarHistorialUI();
+        }
+
+        function siguienteCarta() {
+            if (barajaRestante.length === 0) {
+                detenerAuto();
+                document.getElementById("card-name").innerText = "¡Se acabó la lotería!";
+                document.getElementById("current-image").style.display = "none";
+                document.getElementById("placeholder").style.display = "block";
+                document.getElementById("placeholder").innerText = "¡Lotería terminada!";
+                hablar("¡Se han terminado todas las cartas! ¡Lotería!");
+                return;
+            }
+
+            if (cartaActualObj) {
+                historialCartas.unshift(cartaActualObj);
+            }
+
+            cartaActualObj = barajaRestante.shift();
+
+            // Actualizar visualización PRIMERO
+            let imgElem = document.getElementById("current-image");
+            let placeholderElem = document.getElementById("placeholder");
+            
+            imgElem.src = cartaActualObj.archivo;
+            imgElem.style.display = "block";
+            placeholderElem.style.display = "none";
+
+            document.getElementById("card-name").innerText = cartaActualObj.nombre;
+            
+            let totalCartas = baraja.length;
+            let cartasRestantesCount = barajaRestante.length;
+            let cartasSacadas = totalCartas - cartasRestantesCount;
+            
+            document.getElementById("counter-badge").innerText = `Carta ${cartasSacadas} de ${totalCartas}`;
+            let porcentaje = (cartasSacadas / totalCartas) * 100;
+            document.getElementById("progress-fill").style.width = porcentaje + "%";
+
+            actualizarHistorialUI();
+
+            // Hablar al FINAL para que no interrumpa el cambio de pantalla
+            if (esPrimeraCarta) {
+                hablar("¡Corre y se va con... la primera! " + cartaActualObj.nombre + ".");
+                esPrimeraCarta = false;
+            } else {
+                hablar(cartaActualObj.nombre);
+            }
+        }
+
+        function actualizarHistorialUI() {
+            let grid = document.getElementById("history-grid");
+            grid.innerHTML = "";
+            document.getElementById("history-count").innerText = historialCartas.length;
+
+            historialCartas.forEach(carta => {
+                let thumb = document.createElement("img");
+                thumb.src = carta.archivo;
+                thumb.className = "history-thumb";
+                thumb.title = carta.nombre;
+                grid.appendChild(thumb);
+            });
+        }
+
+        function toggleAuto() {
+            if (isAutoPlaying) {
+                detenerAuto();
+            } else {
+                iniciarAuto();
+            }
+        }
+
+        function iniciarAuto() {
+            if (barajaRestante.length === 0) {
+                reiniciarJuego();
+            }
+            isAutoPlaying = true;
+            let btn = document.getElementById("btn-auto");
+            btn.innerText = "Pausar Automático";
+            btn.className = "warning";
+
+            siguienteCarta();
+            autoInterval = setInterval(() => {
+                if (barajaRestante.length === 0) {
+                    detenerAuto();
+                } else {
+                    siguienteCarta();
+                }
+            }, intervaloSegundos * 1000);
+        }
+
+        function detenerAuto() {
+            isAutoPlaying = false;
+            let btn = document.getElementById("btn-auto");
+            btn.innerText = "Modo Automático";
+            btn.className = "success";
+            if (autoInterval) {
+                clearInterval(autoInterval);
+                autoInterval = null;
+            }
+        }
+
+        // Inicializar
+        reiniciarJuego();
+    </script>
+</body>
+</html>
